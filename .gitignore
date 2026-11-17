@@ -1,0 +1,15 @@
+# Local credentials and tooling
+.env
+.env.*
+!.env.example
+node_modules/
+.wrangler/
+.DS_Store
+Thumbs.db
+*.log
+
+# Local review screenshots and duplicate skill validation output
+skill-validation/
+cyber-card/*-preview.png
+cyber-card/*-preview.jpg
+
