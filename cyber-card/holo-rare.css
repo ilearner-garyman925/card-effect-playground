@@ -1,0 +1,118 @@
+/* Adapted from Simon Goellner, pokemon-cards-css/public/css/cards/regular-holo.css.
+ * GPL-3.0; see HOLO-LICENSE.txt. Adaptation: local angle variables, size/strength
+ * controls, artwork-safe clipping and grade-dependent opacity. SSR is independent.
+ */
+.tilt[data-texture=holo]{--violet:#bc00ff;--blue:#069dff;--green:#26e785;--yellow:#ffe539;--red:#ff3860}
+.texture-thumb .holo-thumb{mask:none;background:repeating-linear-gradient(90deg,#111 0 4px,#7edcff 5px,#ffe2a0 7px,#111 10px 18px)}
+.tilt[data-texture=holo] .theme-texture>i{display:none!important}
+.tilt[data-texture=holo] .theme-texture:before,.tilt[data-texture=holo] .theme-texture:after{position:absolute;inset:0;pointer-events:none}
+.tilt[data-texture=holo] .theme-texture {
+
+  --scanlines-space: calc(.65px * var(--texture-scale,1));
+  --scanlines-light: #666;
+  --scanlines-dark: black;
+
+  --bars: calc(3% * var(--texture-scale,1));
+  --bar-color: hsla(0, 0%, 70%, 1);
+  --bar-bg: hsla(0, 0%, 0%, 1);
+
+  clip-path: polygon(0 5%,100% 5%,100% 87%,0 87%);
+
+  background-image: 
+    repeating-linear-gradient( 110deg, 
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red), 
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red),
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red)
+    ),
+    repeating-linear-gradient( 90deg, 
+      var(--scanlines-dark) calc(var(--scanlines-space) * 0), var(--scanlines-dark) calc(var(--scanlines-space) * 2),
+      var(--scanlines-light) calc(var(--scanlines-space) * 2), var(--scanlines-light) calc(var(--scanlines-space) * 4)
+    );
+
+  background-position: 
+    calc(((50% - var(--holo-x,50%)) * 2.6) + 50%) calc(((50% - var(--holo-y,50%)) * 3.5) + 50%),
+    center center;
+
+  background-size: 
+    400% 400%, 
+    cover;
+
+  background-blend-mode: overlay;
+  filter: brightness(1.1) contrast(1.1) saturate(1.2);
+  mix-blend-mode: color-dodge;
+
+}
+
+.tilt[data-texture=holo] .theme-texture:before {
+  
+  content: "";
+
+  background-image:
+    repeating-linear-gradient( 90deg, 
+      var(--bar-bg) calc(var(--bars)*2), 
+      var(--bar-color) calc(var(--bars)*3), 
+      var(--bar-bg) calc(var(--bars)*3.5), 
+      var(--bar-color) calc(var(--bars)*4), 
+      var(--bar-bg) calc(var(--bars)*5), 
+      var(--bar-bg) calc(var(--bars)*14)
+    ),
+    repeating-linear-gradient( 90deg, 
+      var(--bar-bg) calc(var(--bars)*2), 
+      var(--bar-color) calc(var(--bars)*3), 
+      var(--bar-bg) calc(var(--bars)*3.5), 
+      var(--bar-color) calc(var(--bars)*4), 
+      var(--bar-bg) calc(var(--bars)*5), 
+      var(--bar-bg) calc(var(--bars)*10)
+    );
+
+  background-position: 
+    calc((((50% - var(--holo-x,50%)) * 1.65) + 50% ) + (var(--holo-y,50%) * 0.5)) var(--holo-x,50%), 
+    calc((((50% - var(--holo-x,50%)) * -0.9) + 50%) - (var(--holo-y,50%) * 0.75) ) var(--holo-y,50%);
+
+  background-size: 
+    200% 200%,
+    200% 200%;
+
+  background-blend-mode: screen;
+  filter: brightness( 1.15 ) contrast( 1.1 );
+  mix-blend-mode: hard-light;
+
+}
+
+.tilt[data-texture=holo] .theme-texture:after {
+
+  content: "";
+    
+  background-image: 
+    radial-gradient( 
+      farthest-corner circle 
+        at var(--mx) var(--my), 
+        hsla(0, 0%, 90%, 0.8) 0%, 
+        hsla(0, 0%, 78%, 0.1) 25%, 
+        hsl(0, 0%, 0%) 90% 
+    );
+    
+  background-position: 
+    center center;
+
+  background-size:
+    cover;
+
+  mix-blend-mode: luminosity; 
+  filter: brightness(0.6) contrast(4);
+
+}
+
+
+/* Avoid combining the old generic rainbow with this self-contained holo stack. */
+.tilt[data-texture=holo]:not([data-foil=normal]) .front .foil,.tilt[data-texture=holo]:not([data-foil=normal]) .front .sparkle{opacity:0}
+.tilt[data-texture=holo][data-foil=special] .theme-texture{opacity:calc(var(--light) * .85 * var(--texture-strength,1))}
+.tilt[data-texture=holo][data-foil=ultra] .theme-texture{opacity:calc(var(--light) * 1.1 * var(--texture-strength,1))}
+.tilt[data-texture=holo][data-foil=normal] .theme-texture,.tilt[data-texture=holo].no-foil .theme-texture{opacity:0}
+.tilt[data-texture=holo]:not([data-foil=normal]) .front .glare{background:radial-gradient(farthest-corner circle at var(--mx) var(--my),#ffffffcc 10%,#ffffff80 20%,#000000bf 90%);filter:brightness(.8) contrast(1.5);mix-blend-mode:overlay;opacity:calc(var(--light)*.8)}
+.tilt[data-texture=holo].no-foil .front .glare{opacity:0}
+.rarity{position:relative}
+.rarity-shine{position:absolute;left:0;top:0;pointer-events:none;color:transparent;-webkit-text-stroke:0;text-shadow:none;background:linear-gradient(110deg,transparent 35%,#fff7 43%,#fff 48%,#fffbc8 51%,transparent 60%);background-size:300% 100%;background-clip:text;-webkit-background-clip:text;animation:ssr-shine 6s ease-in-out infinite;filter:drop-shadow(0 0 2px #fff4)}
+@keyframes ssr-shine{0%,60%{background-position:150% 0;opacity:0}65%{opacity:1}90%{opacity:1}96%,100%{background-position:-50% 0;opacity:0}}
+.no-foil .rarity-shine{visibility:hidden}
+@media(prefers-reduced-motion:reduce){.rarity-shine{animation:none;display:none}}

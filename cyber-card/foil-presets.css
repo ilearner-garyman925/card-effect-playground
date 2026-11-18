@@ -1,0 +1,26 @@
+.foil-picker{flex:none;display:flex;align-items:center;gap:8px;border:0;border-bottom:1px solid #384656;margin:0;padding:10px 16px;min-width:0}
+.foil-picker legend{float:left;margin-right:10px;padding:7px 0;color:#a5b9c9;font-size:12px}
+.foil-picker label{margin:0;position:relative;cursor:pointer;font-size:12px}
+.foil-picker input{position:absolute;opacity:0;width:1px;height:1px}
+.foil-picker label span{display:block;padding:7px 15px;border:1px solid #465a70;border-radius:5px;background:#182330;white-space:nowrap}
+.foil-picker input:checked+span{border-color:#87e5f0;background:#234653;color:#e7fcff;box-shadow:inset 0 0 12px #61e5ff15}
+.foil-picker input:focus-visible+span{outline:2px solid #a8f9ff;outline-offset:3px}
+.preview-stage .display{width:min(100%,calc((100svh - 315px)*.716))}
+/* A face-safe mask and an opaque title area keep both identities readable. */
+.tilt[data-foil] .front .foil,.tilt[data-foil] .front .sparkle{mask-image:radial-gradient(ellipse at 51% 29%,#0001 0%,#0004 14%,#000b 28%,#000 48%);clip-path:polygon(0 0,100% 0,100% 88%,0 88%)}
+.tilt[data-foil] .glare{background:radial-gradient(ellipse at var(--mx) var(--my),#fff9 0%,#fff2 22%,transparent 58%);opacity:calc(.08 + var(--light)*.4)}
+.tilt[data-foil=normal] .foil,.tilt[data-foil=normal] .sparkle{opacity:0}
+.tilt[data-foil=normal] .glare{opacity:calc(.06 + var(--light)*.38)}
+.tilt[data-foil=special] .foil{background-image:repeating-linear-gradient(125deg,#244c7d00 0%,#48e4ff99 14%,#7483ffbb 26%,#cd81ffa6 37%,#244c7d00 50%);background-size:260% 260%;background-position:var(--mx) var(--my);mix-blend-mode:color-dodge;opacity:calc(.16 + var(--light)*.35)}
+.tilt[data-foil=special] .foil:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(125deg,#ccefff55 0 1px,transparent 1px 4px);mix-blend-mode:soft-light}
+.tilt[data-foil=special] .sparkle{opacity:0}
+.tilt[data-foil=ultra] .foil{background-image:repeating-linear-gradient(115deg,#e8b8ff 0%,#90c6ff 13%,#8cffe1 26%,#ffe6a1 39%,#ffb1e0 52%,#9a9eff 65%);background-size:350% 350%;background-position:var(--mx) var(--my);mix-blend-mode:color-dodge;opacity:calc(.10 + var(--light)*.30)}
+.tilt[data-foil=ultra] .foil:after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent 0 13px,#e7fcffb3 14px,transparent 16px 29px),repeating-linear-gradient(-45deg,transparent 0 13px,#cbb7ff99 14px,transparent 16px 29px);background-position:calc(100% - var(--mx)) var(--my),var(--mx) calc(100% - var(--my));background-size:180% 180%;mix-blend-mode:overlay;opacity:.65}
+.tilt[data-foil=ultra] .sparkle{background-image:radial-gradient(circle,#fff 0 .7px,transparent 1.8px),radial-gradient(circle,#c9faff 0 .8px,transparent 2px),radial-gradient(circle,#ffe4a9 0 .6px,transparent 1.5px);background-size:17px 29px,37px 23px,47px 41px;background-position:var(--mx) var(--my),calc(100% - var(--mx)) var(--my),var(--my) calc(100% - var(--mx));mix-blend-mode:color-dodge;opacity:calc(.12 + var(--light)*.55)}
+.tilt[data-foil=ultra] .sparkle{mask-image:radial-gradient(ellipse at var(--mx) var(--my),#000 0%,#0009 24%,transparent 60%)}
+.tilt[data-foil=ultra] .front .sparkle{mask-image:radial-gradient(ellipse at var(--mx) var(--my),#000 0%,#0009 24%,transparent 60%),radial-gradient(ellipse at 51% 29%,#0001 0%,#0004 14%,#000b 28%,#000 48%);mask-composite:intersect}
+.tilt.no-foil[data-foil] .foil,.tilt.no-foil[data-foil] .glare,.tilt.no-foil[data-foil] .sparkle{opacity:0}
+@media(max-width:580px){.foil-picker{gap:6px;padding:10px}.foil-picker label span{padding:7px 12px}.foil-picker legend{margin-right:4px}.preview-stage .display{width:min(100%,365px)}}
+
+.tilt[data-foil=ultra] .glare:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent 0 13px,#cdf7ff88 14px,transparent 15px 29px),repeating-linear-gradient(-45deg,transparent 0 13px,#e8caff88 14px,transparent 15px 29px);background-position:var(--mx) var(--my);background-size:150% 150%;mask-image:radial-gradient(ellipse at var(--mx) var(--my),#000,transparent 65%)}
+.tilt[data-foil=ultra] .front .glare:after{clip-path:polygon(0 0,100% 0,100% 88%,0 88%)}

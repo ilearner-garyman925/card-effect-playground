@@ -1,0 +1,539 @@
+/* Adapted from Simon Goellner pokemon-cards-css (GPL-3.0). See HOLO-LICENSE.txt and *-source.css. */
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]){--card-glow:#7ecfe8;--foil:url('trainerbg.png');--grain:url('grain.webp');--glitter:url('glitter.png');--sunpillar-clr-1:hsl(2,100%,73%);--sunpillar-clr-2:hsl(53,100%,69%);--sunpillar-clr-3:hsl(93,100%,69%);--sunpillar-clr-4:hsl(176,100%,76%);--sunpillar-clr-5:hsl(228,100%,74%);--sunpillar-clr-6:hsl(283,100%,73%)}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .theme-texture{mix-blend-mode:color-dodge}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .theme-texture>i{display:none!important}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .theme-texture:before,.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .theme-texture:after,.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .front .glare:after{position:absolute;inset:0;pointer-events:none;display:block}
+
+.tilt[data-texture=cosmos] .theme-texture{
+
+  --space: 4%;
+
+  
+
+  background-image: 
+    url("cosmos-bottom.png"), 
+    repeating-linear-gradient(
+      82deg, 
+      hsl(53, 65%, 60%) calc(var(--space)*1), 
+      hsl(93, 56%, 50%) calc(var(--space)*2), 
+      hsl(176, 54%, 49%) calc(var(--space)*3), 
+      hsl(228, 59%, 55%) calc(var(--space)*4), 
+      hsl(283, 60%, 55%) calc(var(--space)*5), 
+      hsl(326, 59%, 51%) calc(var(--space)*6), 
+      hsl(326, 59%, 51%) calc(var(--space)*7), 
+      hsl(283, 60%, 55%) calc(var(--space)*8), 
+      hsl(228, 59%, 55%) calc(var(--space)*9), 
+      hsl(176, 54%, 49%) calc(var(--space)*10), 
+      hsl(93, 56%, 50%) calc(var(--space)*11), 
+      hsl(53, 65%, 60%) calc(var(--space)*12) 
+    ), 
+    radial-gradient( 
+      farthest-corner circle 
+      at var(--mx) var(--my), 
+      hsla(180, 100%, 89%, 0.5) 5%, 
+      hsla(180, 14%, 57%, 0.3) 40%, 
+      hsl(0, 0%, 0%) 130% 
+  );
+
+  background-blend-mode: 
+    color-burn, 
+    multiply;
+
+  background-position: 
+    var(--cosmosbg, center center),
+    calc( 10% + ( var(--pointer-from-left) * 80% ) ) calc( 10% + ( var(--pointer-from-top) * 80% ) ), 
+    center center;
+
+  background-size: calc(100% * var(--texture-scale,1)) auto, 400% 900%, cover;
+
+  filter: brightness(1) contrast(1) saturate(.8);
+  mix-blend-mode: color-dodge;
+
+}
+.tilt[data-texture=cosmos] .theme-texture:before{
+
+  content: "";
+  z-index: 2;
+
+  background-image: 
+    url("cosmos-middle-trans.png"), 
+    repeating-linear-gradient(
+      82deg, 
+      hsl(53, 65%, 60%) calc(var(--space)*1), 
+      hsl(93, 56%, 50%) calc(var(--space)*2), 
+      hsl(176, 54%, 49%) calc(var(--space)*3), 
+      hsl(228, 59%, 55%) calc(var(--space)*4), 
+      hsl(283, 60%, 55%) calc(var(--space)*5), 
+      hsl(326, 59%, 51%) calc(var(--space)*6), 
+      hsl(326, 59%, 51%) calc(var(--space)*7), 
+      hsl(283, 60%, 55%) calc(var(--space)*8), 
+      hsl(228, 59%, 55%) calc(var(--space)*9), 
+      hsl(176, 54%, 49%) calc(var(--space)*10), 
+      hsl(93, 56%, 50%) calc(var(--space)*11), 
+      hsl(53, 65%, 60%) calc(var(--space)*12) 
+    );
+
+  background-blend-mode: 
+    lighten, 
+    multiply;
+
+  background-position: 
+    var(--cosmosbg, center center), 
+    calc( 15% + ( var(--pointer-from-left) * 70% ) ) calc( 15% + ( var(--pointer-from-top) * 70% ) ), 
+    center center;
+
+  background-size: calc(100% * var(--texture-scale,1)) auto, 400% 900%, cover;
+
+  filter: brightness(1.25) contrast(1.75) saturate(.8);
+  mix-blend-mode: overlay;
+
+}
+.tilt[data-texture=cosmos] .theme-texture:after{
+  
+  content: "";
+  z-index: 3;
+
+  background-image: 
+    url("cosmos-top-trans.png"), 
+    repeating-linear-gradient(
+      82deg, 
+      hsl(53, 65%, 60%) calc(var(--space)*1), 
+      hsl(93, 56%, 50%) calc(var(--space)*2), 
+      hsl(176, 54%, 49%) calc(var(--space)*3), 
+      hsl(228, 59%, 55%) calc(var(--space)*4), 
+      hsl(283, 60%, 55%) calc(var(--space)*5), 
+      hsl(326, 59%, 51%) calc(var(--space)*6), 
+      hsl(326, 59%, 51%) calc(var(--space)*7), 
+      hsl(283, 60%, 55%) calc(var(--space)*8), 
+      hsl(228, 59%, 55%) calc(var(--space)*9), 
+      hsl(176, 54%, 49%) calc(var(--space)*10), 
+      hsl(93, 56%, 50%) calc(var(--space)*11), 
+      hsl(53, 65%, 60%) calc(var(--space)*12) 
+    );
+
+  background-blend-mode: 
+    multiply, 
+    multiply;
+
+  background-position: 
+    var(--cosmosbg, center center), 
+    calc( 20% + ( var(--pointer-from-left) * 60% ) ) calc( 20% + ( var(--pointer-from-top) * 60% ) ), 
+    center center;
+
+  background-size: calc(100% * var(--texture-scale,1)) auto, 400% 900%, cover;
+
+  filter: brightness(1.25) contrast(1.75) saturate(.8);
+  mix-blend-mode: multiply;
+
+}
+.tilt[data-texture=cosmos] .front .glare{
+  
+  background-image: 
+    radial-gradient( 
+      farthest-corner circle at var(--mx) var(--my), 
+      hsla(204, 100%, 95%, 0.8) 5%, 
+      hsla(250, 15%, 20%, 1) 150% 
+    );
+  filter: brightness(.75) contrast(2) saturate(2);
+  mix-blend-mode: overlay;
+  opacity: calc( var(--light) * ( 0.25 + var(--pointer-from-center) ) );
+    
+}
+.tilt[data-texture=cosmos] .front .glare:after{
+
+  content: "";
+
+  background-image: 
+    radial-gradient( farthest-corner circle at 
+      var(--mx) var(--my), 
+      hsl(280, 100%, 96%) 5%, 
+      hsl(0, 0%, 10%) 60%
+    );
+
+  filter: brightness(.75) contrast(2.5) saturate(2);
+  mix-blend-mode: soft-light;
+  opacity: calc( 1 - var(--pointer-from-top) * .75 );
+
+}
+.tilt[data-texture=radiant] .theme-texture{
+  
+}
+.tilt[data-texture=radiant] .theme-texture:after{
+  
+}
+.tilt[data-texture=radiant] .theme-texture{
+
+  --barwidth: calc(1.2% * var(--texture-scale,1));
+  --space: 200px;
+  --hue: 50;
+  --imgsize: cover;
+
+  background-image: 
+    radial-gradient( 
+      farthest-corner ellipse 
+      at calc( ((var(--mx)) * 0.5) + 25% ) calc( ((var(--my)) * 0.5) + 25% ), 
+      hsl(0, 0%, 95%) 20%, 
+      var(--card-glow) 130% 
+    ),
+    repeating-linear-gradient( 
+      45deg, 
+      hsl(0,0%,10%) 0% ,  
+      hsl(0,0%,10%) 1% , 
+      hsl(0,0%,10%) var(--barwidth),
+      hsl(0,0%,20%) calc( var(--barwidth) + 0.01% ) ,
+      hsl(0,0%,20%) calc( var(--barwidth) * 2 ),
+      hsl(0,0%,35%) calc( var(--barwidth) * 2 + 0.01% ) ,
+      hsl(0,0%,35%) calc( var(--barwidth) * 3 ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 3 + 0.01% ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 4 ) ,
+      hsl(0,0%,50%) calc( var(--barwidth) * 4 + 0.01% ) ,
+      hsl(0,0%,50%) calc( var(--barwidth) * 5 ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 5 + 0.01% ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 6 ) ,
+      hsl(0,0%,35%) calc( var(--barwidth) * 6 + 0.01% ) ,
+      hsl(0,0%,35%) calc( var(--barwidth) * 7 ) ,
+      hsl(0,0%,20%) calc( var(--barwidth) * 7 + 0.01% ) ,
+      hsl(0,0%,20%) calc( var(--barwidth) * 8 )  ,
+      hsl(0,0%,10%) calc( var(--barwidth) * 8 + 0.01% ) ,
+      hsl(0,0%,10%) calc( var(--barwidth) * 9 )  ,
+      hsl(0,0%,0%) calc( var(--barwidth) * 9 + 0.01% ) ,
+      hsl(0,0%,0%) calc( var(--barwidth) * 10 ) 
+    ),
+    repeating-linear-gradient( 
+      -45deg, 
+      hsl(0,0%,10%) 0% ,  
+      hsl(0,0%,10%) 1% , 
+      hsl(0,0%,10%) var(--barwidth),
+      hsl(0,0%,20%) calc( var(--barwidth) + 0.01% ) ,
+      hsl(0,0%,20%) calc( var(--barwidth) * 2 ),
+      hsl(0,0%,35%) calc( var(--barwidth) * 2 + 0.01% ) ,
+      hsl(0,0%,35%) calc( var(--barwidth) * 3 ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 3 + 0.01% ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 4 ) ,
+      hsl(0,0%,50%) calc( var(--barwidth) * 4 + 0.01% ) ,
+      hsl(0,0%,50%) calc( var(--barwidth) * 5 ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 5 + 0.01% ) ,
+      hsl(0,0%,42.5%) calc( var(--barwidth) * 6 ) ,
+      hsl(0,0%,35%) calc( var(--barwidth) * 6 + 0.01% ) ,
+      hsl(0,0%,35%) calc( var(--barwidth) * 7 ) ,
+      hsl(0,0%,20%) calc( var(--barwidth) * 7 + 0.01% ) ,
+      hsl(0,0%,20%) calc( var(--barwidth) * 8 )  ,
+      hsl(0,0%,10%) calc( var(--barwidth) * 8 + 0.01% ) ,
+      hsl(0,0%,10%) calc( var(--barwidth) * 9 )  ,
+      hsl(0,0%,0%) calc( var(--barwidth) * 9 + 0.01% ) ,
+      hsl(0,0%,0%) calc( var(--barwidth) * 10 ) 
+    );
+
+  background-size: cover, 210% 210%, 210% 210%;
+  background-position: 
+    center, 
+    calc( ((var(--holo-x) - 50%) * 1.5) + 50% ) calc( ((var(--holo-y) - 50%) * 1.5) + 50% ), 
+    calc( ((var(--holo-x) - 50%) * 1.5) + 50% ) calc( ((var(--holo-y) - 50%) * 1.5) + 50% );
+
+  background-blend-mode: exclusion, darken, color-dodge;
+
+  filter: brightness(.5) contrast(2) saturate(1.75);
+  mix-blend-mode: color-dodge;
+
+}
+.tilt[data-texture=radiant] .theme-texture:after{
+
+  content: "";
+
+  background-image: 
+    var(--foil), 
+    repeating-linear-gradient( 55deg, 
+    hsl(3, 95%, 85%) calc(var(--space)*1), 
+    hsl(207, 100%, 84%) calc(var(--space)*2), 
+    hsl(29, 100%, 85%) calc(var(--space)*3), 
+    hsl(160, 100%, 86%) calc(var(--space)*4), 
+    hsl(309, 94%, 87%) calc(var(--space)*5), 
+    hsl(188, 95%, 85%) calc(var(--space)*6), 
+    hsl(3, 95%, 85%) calc(var(--space)*7) 
+  );
+
+  background-size: var(--imgsize), 400% 100%;
+  background-position: center, calc( ((var(--holo-x) - 50%) * -2.5) + 50% ) calc( ((var(--holo-y) - 50%) * -2.5) + 50% );
+  
+  filter: brightness(.6) contrast(3) saturate(2);
+  mix-blend-mode: color-dodge;
+
+  background-blend-mode: hard-light;
+  
+}
+.tilt[data-texture=radiant] .theme-texture:before{
+  
+  content: "";
+  z-index: 2;
+  grid-area: 1/1;
+
+  background-image: 
+    var(--glitter), 
+    radial-gradient( 
+      farthest-corner ellipse at calc( ((var(--mx)) * 0.5) + 25% ) calc( ((var(--my)) * 0.5) + 25% ), 
+      hsla(0, 0%, 58%, 0.8) 10%, 
+      hsla(0, 0%, 20%, 0.9) 20%, 
+      hsla(0, 0%, 20%, 0.5) 50% 
+    );
+
+  background-position: center;
+  background-size: 15% 15%, 350% 350%;
+  background-blend-mode: color-dodge;
+
+  mix-blend-mode: overlay;
+  filter: brightness(.66) contrast(2) saturate(.5);
+
+}
+.tilt[data-texture=radiant] .front .glare{
+  
+  background-image: 
+    radial-gradient( 
+      farthest-corner circle at var(--mx) var(--my),
+      hsla(0, 0%, 100%, 0.33) 0%, 
+      hsl(0, 0%, 25%) 110% 
+    );
+  
+  filter: brightness(1) contrast(1.5);
+  mix-blend-mode: hard-light;
+
+}
+.tilt[data-texture=radiant] .theme-texture,
+.tilt[data-texture=radiant] .theme-texture:after{
+
+  --mask: none;
+  --foil: url("trainerbg.png"); 
+  --imgsize: 25% auto;
+
+}
+.tilt[data-texture=radiant] .theme-texture:after{
+
+  background-blend-mode: difference;
+  
+}
+.tilt[data-texture=pokev] .theme-texture{
+
+  filter: brightness(.7) contrast(2) saturate(.5);
+
+}
+.tilt[data-texture=pokev] .theme-texture,
+.tilt[data-texture=pokev] .theme-texture:after{
+
+  --space: calc(5% * var(--texture-scale,1));
+  --angle: 133deg;
+  --imgsize: 500px;
+
+  background-image:
+    var(--grain),
+    repeating-linear-gradient( 0deg, 
+      var(--sunpillar-clr-1) calc(var(--space)*1), 
+      var(--sunpillar-clr-2) calc(var(--space)*2), 
+      var(--sunpillar-clr-3) calc(var(--space)*3), 
+      var(--sunpillar-clr-4) calc(var(--space)*4), 
+      var(--sunpillar-clr-5) calc(var(--space)*5), 
+      var(--sunpillar-clr-6) calc(var(--space)*6), 
+      var(--sunpillar-clr-1) calc(var(--space)*7)
+    ),
+    repeating-linear-gradient( 
+      var(--angle), 
+      #0e152e 0%, 
+      hsl(180, 10%, 60%) 3.8%, 
+      hsl(180, 29%, 66%) 4.5%, 
+      hsl(180, 10%, 60%) 5.2%, 
+      #0e152e 10% , 
+      #0e152e 12% 
+      ),
+    radial-gradient(
+      farthest-corner circle 
+      at var(--mx) var(--my),
+      hsla(0, 0%, 0%, 0.1) 12%, 
+      hsla(0, 0%, 0%, 0.15) 20%, 
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+
+  background-blend-mode: screen, hue, hard-light;
+  background-size: var(--imgsize) 100%, 200% 700%, 300% 100%, 200% 100%;
+  background-position: center, 0% var(--holo-y), var(--holo-x) var(--holo-y), var(--holo-x) var(--holo-y);
+  
+  filter: brightness(.8) contrast(2.95) saturate(.65);
+
+}
+.tilt[data-texture=pokev] .theme-texture:after{
+
+  content: "";
+
+  background-position: center, 0% var(--holo-y), calc( var(--holo-x) * -1) calc( var(--holo-y) * -1), var(--holo-x) var(--holo-y);
+  background-size: var(--imgsize) 100%, 200% 400%, 195% 100%, 200% 100%;
+
+  filter: brightness(1) contrast(2.5) saturate(1.75);
+  mix-blend-mode: soft-light;
+
+}
+.tilt[data-texture=pokev] .front .glare{
+
+  background-image: 
+    radial-gradient( 
+      farthest-corner circle at var(--mx) var(--my), 
+        hsl(0, 0%, 100%) 0%, 
+        hsla(210, 3%, 54%, 0.33) 45%, 
+        hsla(0, 0%, 20%, 0.9) 130% 
+      );
+
+  opacity: calc(var(--light)*.5);
+  
+  mix-blend-mode: hard-light;
+  filter: brightness(.9) contrast(1.75);
+
+}
+.tilt[data-texture=trainer] .theme-texture,
+.tilt[data-texture=trainer] .theme-texture:after{
+
+  --space: calc(5% * var(--texture-scale,1));
+  --angle: 133deg;
+  --imgsize: cover;
+
+  background-image:
+    var(--foil),
+    repeating-linear-gradient( 0deg, 
+      var(--sunpillar-clr-1) calc(var(--space)*1), 
+      var(--sunpillar-clr-2) calc(var(--space)*2), 
+      var(--sunpillar-clr-3) calc(var(--space)*3), 
+      var(--sunpillar-clr-4) calc(var(--space)*4), 
+      var(--sunpillar-clr-5) calc(var(--space)*5), 
+      var(--sunpillar-clr-6) calc(var(--space)*6), 
+      var(--sunpillar-clr-1) calc(var(--space)*7)
+    ),
+    repeating-linear-gradient( 
+      var(--angle), 
+      #0e152e 0%, 
+      hsl(180, 10%, 60%) 3.8%, 
+      hsl(180, 29%, 66%) 4.5%, 
+      hsl(180, 10%, 60%) 5.2%, 
+      #0e152e 10% , 
+      #0e152e 12% 
+      ),
+    radial-gradient(
+      farthest-corner circle 
+      at var(--mx) var(--my),
+      hsla(0, 0%, 0%, 0.1) 12%, 
+      hsla(0, 0%, 0%, 0.15) 20%, 
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+
+  background-position: 
+    center center, 
+    0% var(--holo-y), 
+    calc( var(--holo-x) + (var(--holo-y)*0.2) ) var(--holo-y), 
+    var(--holo-x) var(--holo-y);
+
+  background-blend-mode: soft-light, hue, hard-light;
+  background-size: var(--imgsize), 200% 700%, 300% 100%, 200% 100%;
+
+  filter: brightness(calc((var(--pointer-from-center)*0.4) + .4)) contrast(1.4) saturate(2.25);
+
+}
+.tilt[data-texture=trainer] .theme-texture:after{
+
+  content: "";
+
+  background-position: 
+    center center, 
+    0% var(--holo-y), 
+    calc( (var(--holo-x) + (var(--holo-y)*0.2)) * -1) calc( var(--holo-y) * -1), 
+    var(--holo-x) var(--holo-y);
+
+  background-size: var(--imgsize), 200% 400%, 195% 100%, 200% 100%;
+
+  filter: brightness(calc((var(--pointer-from-center)*.4) + .8)) contrast(1.5) saturate(1.25);
+  mix-blend-mode: exclusion;
+
+}
+.tilt[data-texture=trainer] .theme-texture:before{
+
+  content: "";
+  -webkit-mask-image: none;
+  mask-image: none;
+  
+  background-image: 
+    radial-gradient( farthest-corner circle at var(--mx) var(--my), 
+      hsl(0, 0%, 100%) 0%, 
+      hsla(0, 0%, 0%, 0) 40% 
+    );
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: overlay;
+  
+  opacity: 0.75;
+  z-index: 1;
+
+}
+.tilt[data-texture=trainer] .front .glare{
+
+  background-image: 
+    radial-gradient( 
+      farthest-corner circle at var(--mx) var(--my), 
+      hsl(0, 0%, 75%) 5%, 
+      hsl(200, 5%, 35%) 60%, 
+      hsl(320, 40%, 10%) 150% 
+    );
+
+  background-size: 120% 150%;
+  background-position: center center;
+
+  mix-blend-mode: hard-light;
+  filter: brightness(1) contrast(1.2) saturate(1);
+  
+  opacity: calc(var(--light) * .75 );
+
+}
+.tilt[data-texture=trainer] .theme-texture{
+  
+  filter: brightness(calc((var(--pointer-from-center)*0.05) + .8)) contrast(1.75) saturate(1.2);
+
+}
+.tilt[data-texture=trainer] .theme-texture:after{
+
+  filter: brightness(calc((var(--pointer-from-center)*.4) + .85)) contrast(2) saturate(.5);
+
+}
+.tilt[data-texture=trainer] .theme-texture:before{
+
+  background-image: 
+    radial-gradient( 
+      farthest-corner circle at var(--mx) var(--my), 
+      hsl(0, 0%, 100%) 0%, 
+      hsla(0, 0%, 0%, 0) 80% 
+    );
+  
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  
+}
+.tilt[data-texture=trainer] .front .glare{
+
+  opacity: calc( var(--light) * .75 );
+  mix-blend-mode: multiply;
+  filter: brightness(1.5) contrast(1.4) saturate(1);
+  background-size: 170% 170%;
+
+}
+.tilt[data-texture=trainer] .theme-texture,
+.tilt[data-texture=trainer] .theme-texture:after{
+
+  --mask: none;
+  --foil: url("trainerbg.png"); 
+  --imgsize: calc(20% * var(--texture-scale,1));
+  
+  background-blend-mode: color-burn, hue, hard-light;
+  filter: brightness(calc((var(--pointer-from-center)*0.05) + .6)) contrast(1.5) saturate(1.2);
+
+}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .front .foil,.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]) .front .sparkle{opacity:0}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer])[data-foil=special] .theme-texture{opacity:calc(var(--light)*var(--texture-strength,1))}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer])[data-foil=ultra] .theme-texture{opacity:calc(var(--light)*1.2*var(--texture-strength,1))}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer])[data-foil=normal] .theme-texture,.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]).no-foil .theme-texture,.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer]).no-foil .front .glare{opacity:0}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer])[data-foil=normal] .front .glare{background:radial-gradient(ellipse at var(--mx) var(--my),#fff6,transparent 60%);mix-blend-mode:screen;filter:none;opacity:calc(var(--light)*.38)}
+.tilt:is([data-texture=cosmos],[data-texture=radiant],[data-texture=pokev],[data-texture=trainer])[data-foil=normal] .front .glare:after{display:none}
+.texture-thumb .cosmos-thumb{mask:none;background: url('cosmos-bottom.png') center/cover,linear-gradient(45deg,#614996,#378da1)}
+.texture-thumb .radiant-thumb{mask:none;background:repeating-linear-gradient(45deg,#304655 0 8px,#c8e8ec 9px,#304655 16px),repeating-linear-gradient(-45deg,#a4eddf 0 8px,#263544 9px 16px);background-blend-mode:difference}
+.texture-thumb .pokev-thumb{mask:none;background:repeating-linear-gradient(133deg,#243248 0 9px,#ae80ce 12px,#9ae8d4 18px,#243248 25px)}
+.texture-thumb .trainer-thumb{mask:none;background:url('trainerbg.png') center/cover,linear-gradient(120deg,#ebbcf2,#91dfdf);background-blend-mode:soft-light}

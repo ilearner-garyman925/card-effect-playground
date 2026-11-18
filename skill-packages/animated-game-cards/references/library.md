@@ -1,0 +1,74 @@
+# 角色庫、背景庫、卡片配方
+
+以下是新專案建議的資料契約，**隨附示範尚未讀取這些 manifest**。先實作 loader／renderer adapter 再提供置換介面。不要把文件設計當成已完成的產品功能。
+
+## 建議目錄
+
+```text
+library/
+  characters/<character-id>/<version>/
+    source.png, neutral.png, torso.png, arm.png, heads.png
+    character.json
+  backgrounds/<background-id>/<version>/
+    clean.png, props/, foreground.png (需要時)
+    background.json
+  motions/<motion-id>.json
+  themes/<theme-id>/
+cards/<card-id>.json
+```
+
+不要從另一角色複製身份資料。角色名稱、稀有度、技能數值不是去背工具可推斷的事實；不確定時用已提供的名稱或清楚的原型標籤。
+
+## 座標規則
+
+- 同一角色的部件在同一 logical canvas 上。基準是 896 × 1200；可採其他尺寸，但全套一致。
+- pivot 和 anchor 儲存為 0–1 正規化座標，附座標系名稱；基準程式的像素座標不能直接套到新角色。
+- 角色的 groundAnchor、頭頂高度、視線／道具目標各自記錄。背景使用 horizonY、groundAnchor、subjectSafeArea。
+- 配方上的 placement 同時給 scale、offset，按 groundAnchor 對齊；不要把人物和背景分別硬拉伸成同一長寬。
+- 頭部圖集需記每格 rect 和 neckAnchor；組圖生成未保證格子準確時先量測。
+
+## 角色 manifest 最少資訊
+
+`id`, `version`, `displayName`, `source`, `logicalSize`, `parts`（path、trim、pivot）、`rig`（neck/shoulder/feet）、`headPoses`（neutral/down/up 的 rect、anchor、gaze）、`groundAnchor`, `styleTags`, `palette`, `lighting`, `supportedMotions`, `approvalStatus`。
+
+`approvalStatus` 區分 draft/reviewed/approved；只有使用者實際批准才可標 approved。背景只獲准某一次合成，不等於所有搭配皆合格。
+
+## 背景 manifest 最少資訊
+
+`id`, `version`, `cleanPlate`, `logicalSize`, `styleTags`, `palette`, `lighting`（direction、temperature、timeOfDay）、`horizonY`, `groundAnchor`, `subjectSafeArea`, `foregroundLayers`, `props`（path、anchor、motion）、`effects`（rain/motes/foliage 等）、`approvalStatus`。
+
+背景需要兩層標籤：**題材**（cyberpunk/forest/temple 等）和 **繪畫特徵**（anime-line/cel-shaded/watercolor/realistic 等）。題材相同但畫風不符仍不合適。
+
+## 匹配策略
+
+先排除嚴重不相容，再排序；不必把主觀感覺包裝成精確百分比。
+
+1. 畫風／線條密度能否共存？
+2. 地平線、鏡頭俯仰與接地面是否相容？人物站位是否會擋掉主要敘事物件？
+3. 主光方向、明暗和冷暖是否可用輕微校色配合？
+4. 角色服裝、題材和劇情是否匹配？
+5. 配色和特效是否襯托角色？背景不應比臉更搶眼。
+
+使用者未指定背景時，從現有合適資產中呈現最多三個有實際圖像的候選，說明簡短理由。能合理沿用已確認搭配時直接做；不要為每次微調設置批准關卡。沒有合適背景才提議新增。
+
+## 卡片配方範例（資料設計，非目前程式可直接執行）
+
+```json
+{
+  "id": "yuki-cyber-001",
+  "character": {"id": "yuki-cyber", "version": "v2"},
+  "background": {"id": "neon-street", "version": "v1"},
+  "motion": "tablet-to-sky",
+  "theme": "black-silver-cyan-violet",
+  "placement": {"scale": 1, "offset": [0, 0]},
+  "display": {"title": "霓虹巡察者", "rarity": "SSR"}
+}
+```
+
+這個範例的文字是已接受卡面上的原型文案，不是未來所有角色的強制設定。
+
+## 低成本批量次序
+
+先完成一位角色＋一個背景的整套流程，將第一個新角色真正接上 manifest，然後用同一背景做第二位角色驗證座標不再硬編碼。之後先擴充角色包，再增加背景包；最後才做批量產卡或選背景介面。
+
+新角色通常仍需要去背、部件重繪、身份驗收及 rig 校準；共享背景和卡框能減少重複工序，不能保證所有人物一鍵成功。

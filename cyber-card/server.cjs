@@ -1,0 +1,3 @@
+const http=require('http'),fs=require('fs'),path=require('path');
+http.createServer((req,res)=>{let p=decodeURIComponent(req.url.split('?')[0]);if(p==='/'||p==='/cyber-card/')p='/index.html';else p=p.replace(/^\/cyber-card/,'');const f=path.join(__dirname,p);if(!f.startsWith(__dirname+path.sep)){res.writeHead(403);return res.end()}fs.readFile(f,(e,d)=>{if(e){res.writeHead(404);return res.end()}res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.jpg':'image/jpeg','.png':'image/png'})[path.extname(f)]||'text/plain');res.end(d)})}).listen(8766,'127.0.0.1',()=>console.log('http://127.0.0.1:8766/'));
+

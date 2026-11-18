@@ -1,0 +1,4 @@
+interface:
+  display_name: "動態角色遊戲卡"
+  short_description: "分離角色與背景，製作可重用的人物動畫、閃箔卡框及翻面遊戲卡"
+  default_prompt: "使用 $animated-game-cards 將這個角色製作成獨立人物包，匹配背景庫並產出可翻面的閃箔動態卡。"
