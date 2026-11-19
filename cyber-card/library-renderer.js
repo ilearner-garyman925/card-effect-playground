@@ -7,9 +7,12 @@ const headLayer=document.createElement('canvas');headLayer.width=232;headLayer.h
 const headCtx=headLayer.getContext('2d');
 const load=src=>{const i=new Image();i.src=src;return i};
 const body=load('body-v2.png'),arm=load('arm-v2.png'),heads=load('heads-v2.png'),bg=load('background-v1.png'),original=load('B.jpg');
-const longhair=load('longhair-outfits-v1.png'),modularHair=load('longhair-layers-v2.png');
-const usesSharedBody=()=>selection.character==='cyber'&&(selection.identity!=='longhair'||selection.sharedBody);
+const modularHair=load('longhair-layers-v2.png');
+const correctedHead=load('longhair-head-neck-v3.png');
+const gIdentity=load('longhair-g-layers-v1.png');
+const usesSharedBody=()=>true;
 const druid=load('druid-person-v1.png'),forest=load('forest-background-v1.png');
+const xianxia=load('xianxia-person-v1.png'),mountains=load('cloud-mountains-v1.png');
 const selection=window.cardSelection||{character:'cyber',background:'city'};
 const state={motion:true,rain:true,glow:true,hover:true,pins:false,solo:false};
 let paused=matchMedia('(prefers-reduced-motion: reduce)').matches,t=0,last=0,ready=false;
@@ -23,7 +26,7 @@ for(const b of document.querySelectorAll('[data-pose]'))b.onclick=()=>{t=Number(
 const ease=x=>{x=Math.max(0,Math.min(1,x));return x*x*x*(x*(x*6-15)+10)};
 function envelope(s,a,b,c,d){return ease((s-a)/(b-a))*(1-ease((s-c)/(d-c)))}
 function pose(){const s=t%6,a=state.motion?Number(strength.value):0;
-if(!usesSharedBody())return{s,down:0,up:0,head:0,weights:[1,0,0],angle:0,arm:0,breath:0,sway:Math.sin(s*Math.PI/3)*10*a,lift:(1-Math.cos(s*Math.PI/3))*2*a,stage:selection.identity==='longhair'?'整體待機擺動':'德魯伊施法待機'};
+if(selection.character!=='cyber')return{s,down:0,up:0,head:0,weights:[1,0,0],angle:0,arm:0,breath:0,sway:Math.sin(s*Math.PI/3)*10*a,lift:(1-Math.cos(s*Math.PI/3))*2*a,stage:selection.character==='druid'?'共用德魯伊衣著 · 施法待機':'共用仙俠長袍 · 御風待機'};
 const d=envelope(s,.3,1.3,1.95,2.85),u=envelope(s,2.4,3.4,4.55,5.7),down=d*a,up=u*a;
 const armDown=envelope(s,.42,1.42,2.07,2.97)*a,armUp=envelope(s,2.52,3.52,4.67,5.82)*a;
 const phase=s*Math.PI/3;
@@ -57,26 +60,66 @@ let bodyGlow,armGlow;
 function glowMask(img){const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');g.drawImage(img,0,0,W,H);const d=g.getImageData(0,0,W,H);for(let i=0;i<d.data.length;i+=4){const r=d.data[i],v=d.data[i+1],b=d.data[i+2];d.data[i+3]*=Math.max(0,Math.min(1,(Math.min(v,b)-r-40)/80));}g.putImageData(d,0,0);return c}
 function paintPart(img,mask,pivot,angle,dy=0){ctx.save();ctx.translate(pivot.x,pivot.y+dy);ctx.rotate(angle);ctx.translate(-pivot.x,-pivot.y);ctx.drawImage(img,0,0,W,H);if(state.glow&&mask){ctx.globalCompositeOperation='screen';ctx.globalAlpha=.15+.65*(.5+.5*Math.sin(t*Math.PI/1.5));ctx.drawImage(mask,0,0)}ctx.restore()}
 // Character registration is independent of the outfit socket and occluder.
-// Layers: rear hair -> body/arm -> head/neck -> collar front -> front hair.
+// Both identities: rear hair -> head/neck -> SAME outfit and arm -> front hair.
 const longhairRig={size:330,top:173,centers:[.517,.509,.5],socket:{x:461,y:373}};
-const cyberCollarFront=new Path2D('M 438 373 Q 462 382 492 369 L 498 398 L 513 412 L 421 418 L 436 395 Z');
+const gIdentityRig={size:290.4,top:196,centers:[.51,.51,.51],socket:{x:461,y:373}};
+const druidLonghairRig={size:430,top:145,centers:[.517,.509,.5],socket:{x:478,y:429}};
+const druidGIdentityRig={size:378.4,top:198,centers:[.51,.51,.51],socket:{x:478,y:429}};
+// Source-space boundary follows the original collar's inner opening.
+// One immutable source supplies BOTH identities' outfit; never generate a second outfit.
+const druidHeadBoundary=new Path2D('M 380 150 L 790 150 L 790 450 L 700 470 L 650 488 L 640 480 L 635 470 L 618 470 L 618 477 Q 585 491 566 514 Q 555 533 550 548 L 556 525 L 552 493 L 546 489 L 528 498 L 515 510 L 490 510 L 380 520 Z');
+const druidOutfit=document.createElement('canvas'),druidBlueHead=document.createElement('canvas');
+for(const layer of [druidOutfit,druidBlueHead]){layer.width=W;layer.height=H}
+function setupDruidLayers(){
+ for(const [layer,operation] of [[druidOutfit,'destination-out'],[druidBlueHead,'destination-in']]){
+  const g=layer.getContext('2d');g.clearRect(0,0,W,H);g.drawImage(druid,0,0,W,H);
+  g.save();g.scale(W/druid.width,H/druid.height);g.globalCompositeOperation=operation;g.fill(druidHeadBoundary);g.restore();
+ }
+}
+const xianxiaGIdentityRig={size:345,top:174,centers:[.51,.51,.51],socket:{x:510,y:388}};
+const xianxiaOutfit=document.createElement('canvas'),xianxiaBlueHead=document.createElement('canvas');
+const xianxiaBoundary=new Path2D('M450 150 L790 150 L790 430 L654 430 L638 422 L642 491 L578 430 L574 416 L550 439 L450 439 Z');
+function setupXianxiaLayers(){
+ for(const [layer,operation] of [[xianxiaOutfit,'destination-out'],[xianxiaBlueHead,'destination-in']]){
+ layer.width=W;layer.height=H;const g=layer.getContext('2d');g.drawImage(xianxia,0,0,W,H);
+ g.save();g.scale(W/xianxia.width,H/xianxia.height);g.globalCompositeOperation=operation;g.fill(xianxiaBoundary);g.restore();
+ }
+}
 function paintIdentityLayer(cellIndex,p){
  const inspection=document.querySelector('#identity-layers').value;
+ if(inspection==='clothes')return;
  if(cellIndex===1&&(inspection==='no-front'||inspection==='neck'))return;
  if(cellIndex===2&&(inspection==='no-back'||inspection==='neck'))return;
  ctx.save();
- const rig=longhairRig,anchor=rig.socket;
+ const useG=selection.character==='xianxia'||inspection!=='previous';
+ const rig=selection.character==='xianxia'?xianxiaGIdentityRig:selection.character==='druid'?(useG?druidGIdentityRig:druidLonghairRig):(useG?gIdentityRig:longhairRig),anchor=rig.socket;
  ctx.translate(anchor.x,anchor.y+p.breath*.5+p.down*2-p.up);
  ctx.rotate(p.angle*.65);ctx.translate(-anchor.x,-anchor.y);
+ if(useG){
+  const cell=gIdentity.width/3;
+  ctx.drawImage(gIdentity,cellIndex*cell,0,cell,gIdentity.height,anchor.x-rig.centers[cellIndex]*rig.size,rig.top,rig.size,rig.size);
+  ctx.restore();return;
+ }
  const cell=modularHair.width/3;
- ctx.drawImage(modularHair,cellIndex*cell,0,cell,modularHair.height,anchor.x-rig.centers[cellIndex]*rig.size,rig.top,rig.size,rig.size);
+ const corrected=true;
+ const top=rig.top+(corrected?6:0);
+ if(cellIndex===0&&corrected){
+   ctx.drawImage(correctedHead,anchor.x-.508*rig.size,top,rig.size,rig.size);
+ }else{
+   ctx.drawImage(modularHair,cellIndex*cell,0,cell,modularHair.height,anchor.x-rig.centers[cellIndex]*rig.size,top,rig.size,rig.size);
+ }
  ctx.restore();
 }
-function paintCollarFront(){
- // Reuse the actual outfit pixels; the occluder stays attached to the torso.
- ctx.save();ctx.clip(cyberCollarFront);
- paintPart(body,bodyGlow,{x:450,y:1100},0);
- ctx.restore();
+function paintStyledActor(pack,p){
+ const inspection=document.querySelector('#identity-layers').value;
+ const cell=pack.heads.width/3;
+ const head=(index)=>{
+  if(inspection==='clothes'||index===1&&['no-front','neck'].includes(inspection)||index===2&&['no-back','neck'].includes(inspection))return;
+  ctx.drawImage(pack.heads,index*cell,0,cell,pack.heads.height,pack.x-pack.size*.5,pack.top,pack.size,pack.size);
+ };
+ head(2);head(0);
+ ctx.save();ctx.translate(W/2,pack.bodyY);ctx.scale(pack.bodyScale,pack.bodyScale);ctx.translate(-W/2,0);ctx.drawImage(pack.body,0,0,W,H);ctx.restore();
+ head(1);
 }
 const depthLayers={background:{x:0,y:0},actor:{x:0,y:0},front:{x:0,y:0}};
 function updateDepth(dt){const target=window.cardDepth||{x:0,y:0};
@@ -92,32 +135,56 @@ function depthPass(key,render){ctx.save();const d=depthLayers[key];ctx.translate
 function renderEffects(pass,p){
  if(state.solo)return;
  // Magic stays with the actor; environmental particles use independent depth.
- depthPass('actor',()=>window.drawCardEffects(ctx,pass,t,p,{...selection,effects:{magic:selection.effects.magic}},Number(canvas.dataset.figureScale||1)));
+ depthPass('actor',()=>window.drawCardEffects(ctx,pass,t,p,{...selection,effects:{magic:selection.effects.magic,qi:selection.effects.qi}},Number(canvas.dataset.figureScale||1)));
  depthPass(pass==='front'?'front':'background',()=>window.drawCardEffects(ctx,pass,t,p,{...selection,effects:{rain:selection.effects.rain,fireflies:selection.effects.fireflies}},Number(canvas.dataset.figureScale||1)));
 }
-function draw(){const p=pose();ctx.clearRect(0,0,W,H);
-if(state.solo){for(let y=0;y<H;y+=32)for(let x=0;x<W;x+=32){ctx.fillStyle=((x+y)/32)%2?'#142332':'#1c3040';ctx.fillRect(x,y,32,32)}}else{ctx.save();ctx.translate(depthLayers.background.x,depthLayers.background.y);ctx.translate(W/2,H/2);const cover=Math.max(1.045,1+2*(Math.abs(depthLayers.background.x)+3)/W,1+2*(Math.abs(depthLayers.background.y)+3)/H);ctx.scale(cover,cover);ctx.translate(-W/2,-H/2);ctx.drawImage(selection.background==='forest'?forest:bg,0,0,W,H);if(selection.background==='city'){ctx.save();ctx.translate(state.hover?Math.sin(t*Math.PI/3)*22:0,state.hover?Math.sin(t*Math.PI/1.5)*8:0);ctx.clip(ship);ctx.drawImage(original,0,0,W,H);ctx.restore()}ctx.restore()}
+function draw(){const p=pose();const art=window.cardArtStyles[selection.artStyle];const styled=selection.artStyle!=='legacy'&&art?.ready;ctx.clearRect(0,0,W,H);
+if(state.solo){for(let y=0;y<H;y+=32)for(let x=0;x<W;x+=32){ctx.fillStyle=((x+y)/32)%2?'#142332':'#1c3040';ctx.fillRect(x,y,32,32)}}else{ctx.save();ctx.translate(depthLayers.background.x,depthLayers.background.y);ctx.translate(W/2,H/2);const cover=Math.max(1.045,1+2*(Math.abs(depthLayers.background.x)+3)/W,1+2*(Math.abs(depthLayers.background.y)+3)/H);ctx.scale(cover,cover);ctx.translate(-W/2,-H/2);ctx.drawImage(styled?art.background:selection.background==='mountains'?mountains:selection.background==='forest'?forest:bg,0,0,W,H);if(selection.background==='city'){ctx.save();ctx.translate(state.hover?Math.sin(t*Math.PI/3)*22:0,state.hover?Math.sin(t*Math.PI/1.5)*8:0);ctx.clip(ship);ctx.drawImage(original,0,0,W,H);ctx.restore()}ctx.restore()}
 renderEffects('back',p);
 // Assemble independent parts first, then move the assembled upper body.
 actorCtx.clearRect(0,0,W,H);ctx=actorCtx;
-if(selection.identity==='longhair'&&!usesSharedBody()){const cell=longhair.width/2,cyber=selection.character==='cyber',h=870,w=cell/longhair.height*h;const center=cyber?.38:.586;ctx.drawImage(longhair,cyber?cell:0,0,cell,longhair.height,448-w*center,160,w,h)}else if(selection.character==='druid'){ctx.drawImage(druid,0,0,W,H)}else{
-if(selection.identity==='longhair')paintIdentityLayer(2,p);
-paintPart(body,bodyGlow,{x:450,y:1100},0);
-paintPart(arm,armGlow,shoulder,p.arm,p.breath);
-if(selection.identity==='longhair'){
-paintIdentityLayer(0,p);
-paintCollarFront();
-paintIdentityLayer(1,p);
-}else{
-ctx.save();ctx.translate(neck.x,neck.y+p.breath+p.down*5-p.up*3);ctx.rotate(p.angle);ctx.translate(-neck.x,-neck.y);
-const cell=heads.width/3;headCtx.clearRect(0,0,232,232);headCtx.globalCompositeOperation='lighter';
-for(let i=0;i<3;i++){if(p.weights[i]<=0)continue;headCtx.globalAlpha=p.weights[i];headCtx.drawImage(heads,i*cell,0,cell,heads.height,0,0,232,232)}headCtx.globalAlpha=1;
-ctx.drawImage(headLayer,343,190);ctx.restore();}}ctx=sceneCtx;depthPass('actor',()=>compositeActor(p));
+if(styled){
+ paintStyledActor(art,p);
+}else if(selection.character==='druid'||selection.character==='xianxia'){
+ const isXianxia=selection.character==='xianxia';
+ const clothesOnly=document.querySelector('#identity-layers').value==='clothes';
+ if(!clothesOnly){
+  if(selection.identity==='longhair'){paintIdentityLayer(2,p);paintIdentityLayer(0,p)}
+  else ctx.drawImage(isXianxia?xianxiaBlueHead:druidBlueHead,0,0);
+ }
+ // The whole original outfit is the foreground occluder, including its exact collar.
+ ctx.drawImage(isXianxia?xianxiaOutfit:druidOutfit,0,0);
+ if(selection.identity==='longhair'&&!clothesOnly)paintIdentityLayer(1,p);
+ }else{
+ const clothesOnly=document.querySelector('#identity-layers').value==='clothes';
+ if(!clothesOnly){
+  if(selection.identity==='longhair'){paintIdentityLayer(2,p);paintIdentityLayer(0,p)}
+  else{
+   ctx.save();ctx.translate(neck.x,neck.y+p.breath-p.down*12-p.up*3);ctx.rotate(p.angle);ctx.translate(-neck.x,-neck.y);
+   const cell=heads.width/3;headCtx.clearRect(0,0,232,232);headCtx.globalCompositeOperation='lighter';
+   for(let i=0;i<3;i++){
+    if(p.weights[i]<=0)continue;
+    headCtx.save();
+    // Exclude the collar baked into the old head atlas. The original body
+    // supplies the only collar for every identity and every head pose.
+    const edge=i===1?[[148,180],[123,188],[101,178]]:[[151,174],[127,186],[103,174]];
+    headCtx.beginPath();headCtx.moveTo(0,0);headCtx.lineTo(232,0);headCtx.lineTo(232,205);
+    headCtx.lineTo(edge[0][0],205);for(const [x,y] of edge)headCtx.lineTo(x,y);headCtx.lineTo(edge[2][0],205);headCtx.lineTo(0,205);headCtx.closePath();headCtx.clip();
+    headCtx.globalAlpha=p.weights[i];headCtx.drawImage(heads,i*cell,0,cell,heads.height,0,0,232,232);headCtx.restore();
+   }
+   headCtx.globalAlpha=1;ctx.drawImage(headLayer,343,190);ctx.restore();
+  }
+ }
+ // The full shared outfit occludes the neck, without an identity-specific collar patch.
+ paintPart(body,bodyGlow,{x:450,y:1100},0);
+ paintPart(arm,armGlow,shoulder,p.arm,p.breath);
+ if(selection.identity==='longhair'&&!clothesOnly)paintIdentityLayer(1,p);
+}ctx=sceneCtx;depthPass('actor',()=>compositeActor(p));
 renderEffects('front',p);
-if(state.pins&&usesSharedBody()){ctx.save();ctx.translate(depthLayers.actor.x,depthLayers.actor.y);const sc=Number(canvas.dataset.figureScale||1);ctx.translate(W/2,160);ctx.scale(sc,sc);ctx.translate(-W/2,-160);ctx.font='17px system-ui';for(const[n,v]of[['頸部',selection.identity==='longhair'?longhairRig.socket:neck],['肩部',shoulder]]){const[x,y]=bodyPoint(v.x,v.y,p);ctx.fillStyle='#7bffdf';ctx.strokeStyle='#06101d';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillText(n,x+13,y)}ctx.restore()}
+if(state.pins&&usesSharedBody()&&selection.character==='cyber'){ctx.save();ctx.translate(depthLayers.actor.x,depthLayers.actor.y);const sc=Number(canvas.dataset.figureScale||1);ctx.translate(W/2,160);ctx.scale(sc,sc);ctx.translate(-W/2,-160);ctx.font='17px system-ui';for(const[n,v]of[['頸部',selection.identity==='longhair'?longhairRig.socket:neck],['肩部',shoulder]]){const[x,y]=bodyPoint(v.x,v.y,p);ctx.fillStyle='#7bffdf';ctx.strokeStyle='#06101d';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillText(n,x+13,y)}ctx.restore()}
 canvas.dataset.time=t.toFixed(3);canvas.dataset.pose=p.head;canvas.dataset.ready='true';scrub.value=p.s;status.textContent=`${paused?'已暫停':'播放中'} · ${p.stage} · ${p.s.toFixed(1)} / 6 秒`;
 }
 function frame(now){if(last&&!paused&&!document.hidden)t+=Math.min(.05,(now-last)/1000);const dt=last?Math.min(.05,(now-last)/1000):1/60;last=now;updateDepth(dt);if(ready)draw();requestAnimationFrame(frame)}
-Promise.all([body,arm,heads,bg,original,druid,forest,longhair,modularHair].map(i=>i.decode())).then(()=>{setupWarp();bodyGlow=glowMask(body);armGlow=glowMask(arm);ready=true;window.dispatchEvent(new Event('card-assets-ready'));requestAnimationFrame(frame)}).catch(e=>{status.textContent='未能啟動：'+e.message;document.querySelector('#library-status').textContent='素材載入失敗，請重新整理';console.error(e)});
+Promise.all([body,arm,heads,bg,original,druid,forest,modularHair,correctedHead,gIdentity,xianxia,mountains].map(i=>i.decode())).then(()=>{setupWarp();setupDruidLayers();setupXianxiaLayers();bodyGlow=glowMask(body);armGlow=glowMask(arm);ready=true;window.dispatchEvent(new Event('card-assets-ready'));requestAnimationFrame(frame)}).catch(e=>{status.textContent='未能啟動：'+e.message;document.querySelector('#library-status').textContent='素材載入失敗，請重新整理';console.error(e)});
 
 

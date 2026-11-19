@@ -1,4 +1,4 @@
-# 角色庫、背景庫、卡片配方
+# 身份庫、衣著庫、背景庫與卡片配方
 
 以下是新專案建議的資料契約，**隨附示範尚未讀取這些 manifest**。先實作 loader／renderer adapter 再提供置換介面。不要把文件設計當成已完成的產品功能。
 
@@ -7,12 +7,18 @@
 ```text
 library/
   characters/<character-id>/<version>/
-    source.png, neutral.png, torso.png, arm.png, heads.png
+    source.png, head-neck.png, hair-back.png, hair-front.png
     character.json
+  outfits/<outfit-id>/<version>/
+    source.png, body.png, collar-mask.png (需要時), parts/
+    outfit.json
+  bindings/<character-id>/<outfit-id>.json
   backgrounds/<background-id>/<version>/
     clean.png, props/, foreground.png (需要時)
     background.json
   motions/<motion-id>.json
+  effects/<effect-id>/
+  textures/<texture-id>/
   themes/<theme-id>/
 cards/<card-id>.json
 ```
@@ -29,7 +35,13 @@ cards/<card-id>.json
 
 ## 角色 manifest 最少資訊
 
-`id`, `version`, `displayName`, `source`, `logicalSize`, `parts`（path、trim、pivot）、`rig`（neck/shoulder/feet）、`headPoses`（neutral/down/up 的 rect、anchor、gaze）、`groundAnchor`, `styleTags`, `palette`, `lighting`, `supportedMotions`, `approvalStatus`。
+`id`, `version`, `displayName`, `source`, `logicalSize`, `parts`（頭頸、前後髮的 path、trim、pivot）、`headPoses`（需要時的 rect、anchor、gaze）、`styleTags`, `palette`, `lighting`, `supportedMotions`, `approvalStatus`。
+
+## 衣著與搭配綁定
+
+衣著保存 `id`, `version`, `source`, `logicalSize`, `parts`（身體、手臂、道具與可選衣領遮擋層）、`rig`（neck/shoulder/feet）、`groundAnchor`, `supportedMotions`, `approvalStatus`。同一衣著 ID 和版本必須指向同一份衣著資產，不以身份暗中選擇另一全身圖。
+
+搭配綁定記錄身份及衣著版本、頭頸接點、頭部尺度／偏移、前後髮對位、遮擋設定及已驗證動作。衣著尺度和頭部尺度分開；詳見 [共用衣著與頭髮分層](shared-outfits.md)。
 
 `approvalStatus` 區分 draft/reviewed/approved；只有使用者實際批准才可標 approved。背景只獲准某一次合成，不等於所有搭配皆合格。
 
@@ -56,8 +68,12 @@ cards/<card-id>.json
 ```json
 {
   "id": "yuki-cyber-001",
-  "character": {"id": "yuki-cyber", "version": "v2"},
+  "character": {"id": "yuki-blue", "version": "v1"},
+  "outfit": {"id": "cyber-armor", "version": "v1"},
+  "binding": "yuki-blue-cyber-armor-v1",
   "background": {"id": "neon-street", "version": "v1"},
+  "effects": ["rain-night"],
+  "texture": {"id": "holofoil-rare", "strength": 0.45},
   "motion": "tablet-to-sky",
   "theme": "black-silver-cyan-violet",
   "placement": {"scale": 1, "offset": [0, 0]},
@@ -69,6 +85,6 @@ cards/<card-id>.json
 
 ## 低成本批量次序
 
-先完成一位角色＋一個背景的整套流程，將第一個新角色真正接上 manifest，然後用同一背景做第二位角色驗證座標不再硬編碼。之後先擴充角色包，再增加背景包；最後才做批量產卡或選背景介面。
+先完成一個身份＋共用衣著＋背景，再用第二個身份接到同一衣著，驗證衣領肩甲不變且頭髮接合正確。資料契約需實際接入 renderer 才算完成；之後可獨立擴充身份、衣著與背景包。
 
-新角色通常仍需要去背、部件重繪、身份驗收及 rig 校準；共享背景和卡框能減少重複工序，不能保證所有人物一鍵成功。
+新身份仍需要頭頸與髮層製作、身份驗收及搭配校準；共用衣著可省去反覆重製身體，不能保證所有頭型一鍵適配。紋理強度按紋理 ID 各自保存；範例的 45% 是使用者接受的 Holofoil Rare 設定，不是其他紋理的統一預設。

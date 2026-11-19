@@ -9,7 +9,7 @@ const textureAssets={"druid": {"name": "葉脈符文", "url": "url(\"data:image/
  const storageKey='yuki-texture-settings-v1';let settings={};
  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))settings=saved}catch{}
  const controls={};
- const effectiveId=()=>selected==='auto'?tilt.dataset.character:selected;
+ const effectiveId=()=>selected==='auto'?(tilt.dataset.character==='xianxia'?'stars':tilt.dataset.character):selected;
  const save=()=>{try{localStorage.setItem(storageKey,JSON.stringify(settings))}catch{}};
  function restore(){const key=effectiveId(),saved=settings[key]||{};for(const [id,c]of Object.entries(controls)){const fallback=id==='texture-strength'?(defaults[key]??1):1;const value=saved[id];c.input.value=typeof value==='number'&&Number.isFinite(value)?Math.max(Number(c.input.min),Math.min(Number(c.input.max),value)):fallback;c.refresh(false)}}
  const choices={auto:{name:'跟隨角色'},none:{name:'無紋理'},...textureAssets,holo:{name:'Holofoil Rare'},cosmos:{name:'Galaxy / Cosmos'},radiant:{name:'Radiant Holofoil'},pokev:{name:'Pokemon V'},trainer:{name:'Trainer Holo'}};

@@ -3,6 +3,17 @@ window.drawCardEffects = (ctx, pass, time, pose, selection, scale) => {
   const fx = selection.effects || {};
   const phase = time * Math.PI / 3;
   ctx.save();
+  if (fx.qi) {
+    ctx.save();ctx.translate(448,160);ctx.scale(scale,scale);ctx.translate(-448,-160);
+    ctx.translate(pose.sway*.7,-pose.lift);ctx.lineCap='round';
+    const point=u=>{const a=u*Math.PI*2+phase;return [448+Math.cos(a)*365,850-u*440+Math.sin(a)*100,Math.sin(a)];};
+    for(const [width,color] of [[26,'rgba(45,205,255,.10)'],[12,'rgba(45,220,255,.35)'],[4,'rgba(178,252,255,.95)']]){
+      ctx.beginPath();ctx.lineWidth=width;ctx.strokeStyle=color;let active=false;
+      for(let j=0;j<=200;j++){const [x,y,z]=point(j/200);const visible=(z>=0)===(pass==='front');if(visible){if(active)ctx.lineTo(x,y);else ctx.moveTo(x,y)}active=visible;}ctx.stroke();
+    }
+    for(let i=0;i<32;i++){const u=((i/32+time/12)%1),[x,y,z]=point(u);if((z>=0)!==(pass==='front'))continue;ctx.fillStyle='#c6fcff';ctx.beginPath();ctx.ellipse(x+Math.sin(i*17)*20,y+Math.cos(i*7)*25,2,5,-.5,0,Math.PI*2);ctx.fill();}
+    ctx.restore();
+  }
   if (fx.magic) {
     ctx.save();
     ctx.translate(448,160); ctx.scale(scale,scale); ctx.translate(-448,-160);
